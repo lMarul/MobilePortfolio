@@ -6,9 +6,7 @@ part 'about_content.g.dart';
 /// ═══════════════════════════════════════════════════════════════════════════
 /// 👤 ABOUT CONTENT MODEL
 /// ═══════════════════════════════════════════════════════════════════════════
-/// Matches Convex aboutContent table schema
-/// 
-/// Actual Convex fields: title, subtitle, bio (array), stats (object)
+/// About section content model
 
 @freezed
 sealed class AboutContent with _$AboutContent {
@@ -26,8 +24,8 @@ sealed class AboutContent with _$AboutContent {
   factory AboutContent.fromJson(Map<String, dynamic> json) =>
       _$AboutContentFromJson(json);
   
-  /// Parse Convex response which has bio as array instead of paragraphs
-  static AboutContent fromConvex(Map<String, dynamic> json) {
+  /// Parse alternative format where bio is an array
+  static AboutContent fromAltFormat(Map<String, dynamic> json) {
     // Handle bio as either string or list
     final rawBio = json['bio'];
     List<String> paragraphsList = [];

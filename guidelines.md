@@ -192,32 +192,34 @@ lib/
 
 ---
 
-## 🗄️ Database Schema (Convex)
+## 🗄️ Data Architecture
 
-### Tables Overview (Shared with Web Portfolio)
+### Local-Only Data Models
 
-| Table | Type | Description |
+All portfolio data is stored locally in the app using Freezed models with fallback data. The app works 100% offline.
+
+| Model | Type | Description |
 |-------|------|-------------|
-| `heroContent` | Single row | Hero section title, subtitle, description, roles |
-| `aboutContent` | Single row | About bio, paragraphs, highlights |
-| `socialLinks` | Multiple rows | Individual social platform links |
-| `contactInfo` | Single row | Contact email, phone, location, availability |
-| `projects` | Multiple rows | Portfolio projects |
-| `skills` | Multiple rows | Technical skills by category |
-| `experiences` | Multiple rows | Work experience (auto-sorted by date) |
-| `hackathons` | Multiple rows | Hackathon participations |
-| `certifications` | Multiple rows | Professional certifications |
-
-**Note:** `userProfile` is **not** stored in Convex. It's a local-only model that synchronizes with `contactInfo` and `socialLinks` for consistency.
+| `heroContent` | Single | Hero section title, subtitle, description, roles |
+| `aboutContent` | Single | About bio, paragraphs, highlights |
+| `socialLinks` | List | Individual social platform links |
+| `contactInfo` | Single | Contact email, phone, location, availability |
+| `projects` | List | Portfolio projects |
+| `skills` | List | Technical skills by category |
+| `experiences` | List | Work experience (auto-sorted by date) |
+| `hackathons` | List | Hackathon participations |
+| `certifications` | List | Professional certifications |
+| `userProfile` | Single | Local-only user profile data |
 
 ### Key Design Decisions
 
-1. **Shared Backend**: Same Convex database as web portfolio
-   - Content changes on web dashboard reflect instantly on mobile
-   - Single source of truth for all content
+1. **Offline-First Architecture**: All data stored locally
+   - No network calls required
+   - Instant loading times
+   - Works everywhere, always
 
 2. **User Profile Synchronization**: Profile screen data comes from multiple sources
-   - Contact info (email, phone) synced from `contactInfo` table
+   - Contact info (email, phone) synced with `contactInfo` model
    - Social links synced from `socialLinks` table
    - Skills, hobbies, interests are local-only (not in Convex)
    - Ensures consistency between Contact Section and Profile Screen
@@ -616,6 +618,11 @@ When working on this project:
   - App name changed to "Marwin's Portfolio" across all platforms (Android, iOS, web)
   - App logo "M" changed from red to black for better contrast against red background
   - Regenerated all app icons with new design
+- **REMOVED**: Convex backend integration (fully offline-first now)
+  - Deleted convex/ directory and TypeScript schemas
+  - Removed convex_client_provider.dart
+  - Updated all model comments to reflect local-only architecture
+  - App is now 100% offline with no backend dependencies
 - **ADDED**: Comprehensive asset handling guidelines to prevent regression
 - **ADDED**: Complete User Profile editing section to EDITING_GUIDE.md
 - **TESTED**: All fixes verified on both web and mobile platforms

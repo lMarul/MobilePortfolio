@@ -3,6 +3,5 @@
 /// ═══════════════════════════════════════════════════════════════════════════
 library;
 
-export 'convex_client_provider.dart';
 export 'portfolio_providers.dart';
 export 'user_providers.dart';

@@ -6,9 +6,7 @@ part 'social_link.g.dart';
 /// ═══════════════════════════════════════════════════════════════════════════
 /// 🔗 SOCIAL LINK MODEL
 /// ═══════════════════════════════════════════════════════════════════════════
-/// Matches Convex socialLinks table schema
-/// 
-/// Actual Convex fields: platform, label, url, color, isActive, order
+/// Social media platform link model
 
 @freezed
 sealed class SocialLink with _$SocialLink {

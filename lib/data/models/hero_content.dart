@@ -6,7 +6,7 @@ part 'hero_content.g.dart';
 /// ═══════════════════════════════════════════════════════════════════════════
 /// 🦸 HERO CONTENT MODEL
 /// ═══════════════════════════════════════════════════════════════════════════
-/// Matches Convex heroContent table schema
+/// Hero section content for the landing page
 
 @freezed
 sealed class HeroContent with _$HeroContent {
@@ -25,7 +25,7 @@ sealed class HeroContent with _$HeroContent {
   factory HeroContent.fromJson(Map<String, dynamic> json) =>
       _$HeroContentFromJson(json);
 
-  /// Fallback content when Convex is unavailable
+  /// Default hero content
   static HeroContent get fallback => const HeroContent(
         id: 'fallback',
         title: 'MARWIN',

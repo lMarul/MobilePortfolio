@@ -28,7 +28,7 @@ This guide will walk you through editing every aspect of your portfolio, from ad
 All portfolio content is stored in **model files** located in `lib/data/models/`. Each model file contains either a `fallback` or `defaultProfile` property that holds your data.
 
 **Why "fallback" and "defaultProfile"?**  
-This app is designed to be offline-first. All content loads instantly from local data, ensuring your portfolio works without an internet connection. The app can optionally sync with a Convex database, but will always fall back to local data if unavailable.
+This app is fully offline-first. All content is stored locally as fallback data in the model files, ensuring your portfolio works instantly without any network connection. There's no backend to configure or maintain.
 
 **Available Sections:**
 - **Projects** - Your portfolio projects with descriptions, tech stack, and links

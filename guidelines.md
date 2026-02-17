@@ -15,7 +15,7 @@
 | **Type** | Personal Developer Portfolio Mobile App |
 | **Framework** | Flutter 3.x |
 | **State Management** | Riverpod (with code generation) |
-| **Database** | Convex (Real-time cloud database) |
+| **Database** | None (100% offline-first with local data) |
 | **Navigation** | GoRouter |
 
 ---
@@ -28,7 +28,7 @@ This is the **mobile version** of Marwin's developer portfolio, mirroring the we
 - Skills and certifications
 - Personal bio and contact information
 
-The app features **premium, 60fps animations** and a **database-driven content management system** that syncs with the web portfolio via Convex.
+The app features **premium, 60fps animations** and **local data storage** for instant loading with zero network dependencies.
 
 ---
 
@@ -42,10 +42,6 @@ The app features **premium, 60fps animations** and a **database-driven content m
 | flutter_riverpod | ^2.6.1 | State management |
 | riverpod_annotation | ^2.6.1 | Code generation for Riverpod |
 
-### Backend
-| Technology | Version | Purpose |
-|------------|---------|---------|
-| convex_flutter | ^3.0.0 | Real-time Convex integration |
 
 ### Navigation
 | Technology | Version | Purpose |
@@ -128,7 +124,6 @@ lib/
 │   │
 │   └── providers/                    # Riverpod providers
 │       ├── providers.dart            # Barrel export
-│       ├── convex_client_provider.dart
 │       └── portfolio_providers.dart  # All data providers
 │
 ├── presentation/                     # UI layer
@@ -220,8 +215,8 @@ All portfolio data is stored locally in the app using Freezed models with fallba
 
 2. **User Profile Synchronization**: Profile screen data comes from multiple sources
    - Contact info (email, phone) synced with `contactInfo` model
-   - Social links synced from `socialLinks` table
-   - Skills, hobbies, interests are local-only (not in Convex)
+   - Social links from `socialLinks` models
+   - Skills, hobbies, interests stored locally
    - Ensures consistency between Contact Section and Profile Screen
 
 3. **Normalized Social Links**: Each platform is a separate row
@@ -230,26 +225,17 @@ All portfolio data is stored locally in the app using Freezed models with fallba
 4. **Experiences Auto-Sort**: Sorted by `startDate` descending
    - Newest experiences appear first automatically
 
-5. **Fallback Data**: All providers have fallback content
-   - App works offline with static data when Convex unavailable
+5. **Local Data Storage**: All data stored in Freezed models with default content
+   - App is 100% offline-first with zero network dependencies
 
-### Convex Integration Pattern
+### Data Architecture Pattern
 
 ```dart
 // In portfolio_providers.dart
 @riverpod
-Future<List<Project>> projects(Ref ref) async {
-  if (!isConvexConfigured) {
-    return Project.fallback;
-  }
-
-  try {
-    final client = ref.watch(convexClientProvider);
-    final result = await client.query('projects:get', {});
-    // Parse and return data...
-  } catch (e) {
-    return Project.fallback; // Graceful fallback
-  }
+List<Project> projects(Ref ref) {
+  // Returns local Freezed models with fallback data
+  return Project.fallback;
 }
 ```
 
@@ -364,28 +350,21 @@ flutter build web --release           # Web deployment
    - Add custom transition in `route_transitions.dart`
 
 5. **Editing Content**
-   - Go to [dashboard.convex.dev](https://dashboard.convex.dev)
-   - Edit tables directly
-   - Changes sync instantly to mobile
+   - Edit model files directly in `lib/data/models/`
+   - Update fallback data in each model file
+   - Changes take effect after hot restart
 
 ---
 
 ## ⚠️ Known Gotchas & Solutions
 
-### 1. Convex Not Configured
-If Convex URL is not set, app uses fallback data:
-```dart
-// In convex_client_provider.dart
-static const bool isConvexConfigured = convexDeploymentUrl.isNotEmpty;
-```
-
-### 2. Freezed Code Not Generating
+### 1. Freezed Code Not Generating
 Run build_runner with delete flag:
 ```powershell
 dart run build_runner build --delete-conflicting-outputs
 ```
 
-### 3. Hot Reload Not Working with Providers
+### 2. Hot Reload Not Working with Providers
 Riverpod providers require hot restart for changes to take effect. Use `r` in terminal.
 
 ### 4. Google Fonts Loading Slowly
@@ -419,9 +398,9 @@ Fragment shaders may cause jank on first use. Warm them up during splash screen 
 1. **Aesthetics**: Premium, visually stunning, 60fps animations
 2. **Performance**: No jank, smooth scrolling, optimized rebuilds
 3. **Mobile UX**: Touch-first, thumb-friendly navigation
-4. **Database Sync**: Real-time sync via Convex dashboard
+4. **Offline-First**: 100% local data, instant loading, zero network dependencies
 5. **Cross-platform**: Works on Android, iOS, Web (same codebase)
-6. **Offline Support**: Fallback data when Convex unavailable
+6. **Easy Updates**: Edit model files directly, changes apply with hot restart
 
 ---
 
@@ -575,7 +554,7 @@ When working on this project:
 5. **Use Freezed** for all data models
 6. **Premium animations** are expected (flutter_animate)
 7. **Performance matters** - use const constructors, avoid rebuilds
-8. **Convex dashboard** is the primary way user edits content
+8. **Local data models** in `lib/data/models/` contain all portfolio content
 9. **User runs Windows** - PowerShell commands
 10. **Follow existing patterns** - check similar files before creating new ones
 11. **Never use spaces in asset filenames** - use snake_case

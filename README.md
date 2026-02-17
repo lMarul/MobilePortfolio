@@ -15,6 +15,7 @@ A stunning, high-performance mobile portfolio application featuring glassmorphis
 - 🎯 **Offline-First** - All content stored locally for instant loading
 - 🚀 **High Performance** - Optimized rendering and efficient state management
 - 🔧 **Easy to Customize** - Simple content editing through Dart models
+- 📱 **Cross-Platform** - Works on iOS, Android, and Web
 
 ---
 
@@ -57,24 +58,9 @@ lib/
 │   │   ├── hackathon.dart
 │   │   └── certification.dart
 │   │
-│   ├── repositories/                 # Convex API abstraction
-│   │   ├── site_content_repository.dart
-│   │   ├── projects_repository.dart
-│   │   ├── skills_repository.dart
-│   │   ├── experiences_repository.dart
-│   │   ├── hackathons_repository.dart
-│   │   └── certifications_repository.dart
-│   │
 │   └── providers/                    # Riverpod providers (data)
-│       ├── convex_provider.dart      # Convex client singleton
-│       ├── hero_provider.dart
-│       ├── about_provider.dart
-│       ├── social_links_provider.dart
-│       ├── projects_provider.dart
-│       ├── skills_provider.dart
-│       ├── experiences_provider.dart
-│       ├── hackathons_provider.dart
-│       └── certifications_provider.dart
+│       ├── portfolio_providers.dart   # All portfolio data providers
+│       └── user_providers.dart        # User profile providers
 │
 ├── presentation/                     # UI layer
 │   ├── screens/                      # Full pages
@@ -181,23 +167,6 @@ lib/
 
 ---
 
-## 🔗 Convex Integration Pattern
-
-```dart
-// lib/data/providers/convex_provider.dart
-final convexClientProvider = Provider<ConvexClient>((ref) {
-  return ConvexClient('YOUR_CONVEX_URL');
-});
-
-// lib/data/providers/hero_provider.dart
-final heroContentProvider = StreamProvider<HeroContent?>((ref) {
-  final client = ref.watch(convexClientProvider);
-  return client.subscribe('siteContent:getHeroContent');
-});
-```
-
----
-
 ## 🎨 Theme Architecture
 
 ```dart
@@ -234,9 +203,9 @@ class CyberpunkColors extends ThemeExtension<CyberpunkColors> {
 ```
 User Action
     ↓
-Riverpod Provider (watches Convex stream)
+Riverpod Provider (loads local data)
     ↓
-Repository (transforms Convex → Model)
+Freezed Model (immutable data class)
     ↓
 UI Widget (rebuilds reactively)
 ```

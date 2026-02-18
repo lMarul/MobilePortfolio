@@ -71,19 +71,16 @@ class _UltimateHeroSectionState extends ConsumerState<UltimateHeroSection>
     super.dispose();
   }
 
-  /// Scroll to a section by its GlobalKey
+  /// Scroll to a section by its GlobalKey - using Flutter's ensureVisible
   void _scrollToSection(GlobalKey sectionKey) {
-    final scrollable = Scrollable.of(context);
-    final renderObject = sectionKey.currentContext?.findRenderObject();
-    if (renderObject is RenderBox) {
-      final position = renderObject.localToGlobal(Offset.zero, ancestor: scrollable.context.findRenderObject());
-      final scrollPosition = scrollable.position;
-      final targetScroll = scrollPosition.pixels + position.dy - 80; // Offset for app bar
-      
-      scrollPosition.animateTo(
-        targetScroll,
+    final context = sectionKey.currentContext;
+    if (context != null) {
+      // Use Flutter's built-in ensureVisible which handles all the complex scroll logic
+      Scrollable.ensureVisible(
+        context,
         duration: const Duration(milliseconds: 800),
-        curve: Curves.easeInOutCubic,
+        curve: Curves.easeOutCubic,
+        alignment: 0.1, // Scroll so the section is 10% from the top (accounts for app bar)
       );
     }
   }
@@ -263,7 +260,7 @@ class _UltimateHeroSectionState extends ConsumerState<UltimateHeroSection>
                                   ),
                                   const SizedBox(width: 8),
                                   Text(
-                                    'View Work',
+                                    'View Works',
                                     style: GoogleFonts.inter(
                                       fontSize: 13,
                                       fontWeight: FontWeight.w600,
